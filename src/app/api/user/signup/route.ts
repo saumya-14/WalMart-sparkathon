@@ -1,7 +1,3 @@
-
-
-
-
 import connectToDatabase from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
 import { NextRequest, NextResponse } from "next/server";
@@ -20,9 +16,20 @@ export async function POST(req: NextRequest) {
 
 
     const existuser = await User.findOne({ email:body.email });
+    const existUsername=await User.findOne({Username:body.Username});
+
+    //checking wether the user with ths email already  exist or not 
     if (existuser) {
       return NextResponse.json(
-        { message: "User alredy exist" },
+        { message: "User this email alredy exist" },
+        { status: 404 }
+      );
+    }
+
+    //checking wether the user with ths username already  exist or not 
+    if (existUsername) {
+      return NextResponse.json(
+        { message: "User with this username alredy exist" },
         { status: 404 }
       );
     }
@@ -35,10 +42,13 @@ export async function POST(req: NextRequest) {
     // add user._id in token
   } 
   
-  catch (error) {
+  catch (error:any) {
     return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
+      { 
+        message: "Internal server error",
+        error:error.message || "Unknown error"
+      },
+      { status: 500 },
     );
   }
   return NextResponse.json({
