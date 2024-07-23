@@ -1,10 +1,11 @@
-import { connecttodb } from "@/app/LIB/db";
+
+
+
+import connectToDatabase from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken"
-const key = process.env.JWT_KEY ||"";
-import cookie from "cookie"
-connecttodb();
+import bcrypt from 'bcryptjs'
 
 // Define the Zod schema for request body validation
 
@@ -12,6 +13,7 @@ connecttodb();
 export async function POST(req: NextRequest) {
 
   try{
+    await connectToDatabase();
     const body = await req.json();
     // Parse and validate the request body
 
@@ -25,7 +27,9 @@ export async function POST(req: NextRequest) {
     }
 
     // first hasr password to Compare passwords
-    if(existuser.password!=body.password) {
+
+    const validpassword=await bcrypt.compare(body.password,existuser.password);
+    if(!validpassword) {
         return NextResponse.json(
             { message: "Incorrect password" },
             { status: 401 }
@@ -33,20 +37,8 @@ export async function POST(req: NextRequest) {
     }
 
 
-    const token = jwt.sign({userid:existuser._id},key);
-
-    const res =  NextResponse.json({
-      message: "User Login successfully",
-      token:token
-    });
-
-    res.cookies.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set to true in production
-      maxAge: 24*3600, // Token expiry time in seconds
-      path: '/', // Path for which the cookie is valid
-    });
-    return res;
+    // Create a token
+    // add user._id in token
 
   } 
   
@@ -58,8 +50,10 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+  return NextResponse.json({
+    message: "User login successfully",
+  });
 }
 
 
 //its working fine on http://localhost:3000/api/user/signin
-//all comment work done by somya
