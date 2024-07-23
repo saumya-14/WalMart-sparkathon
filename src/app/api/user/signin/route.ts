@@ -1,19 +1,20 @@
 
 
 
-import connectToDatabase from "@/app/LIB/db";
+import { connecttodb } from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcryptjs'
-
+import jwt from "jsonwebtoken"
+const key = process.env.JWT_KEY||"SECRET"
+connecttodb();
 // Define the Zod schema for request body validation
 
 
 export async function POST(req: NextRequest) {
 
   try{
-    await connectToDatabase();
     const body = await req.json();
     // Parse and validate the request body
 
@@ -37,22 +38,28 @@ export async function POST(req: NextRequest) {
     }
 
 
-    // Create a token
-    // add user._id in token
+    const token = jwt.sign({userid:existuser._id},key);
 
-  } 
+      const res =  NextResponse.json({
+        message: "User login successfully",
+        token:token
+      });
+      res.cookies.set('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',// Set to false for local development, true for production
+        maxAge: 24*3600, // Token expiry time in seconds
+        path: '/', // Path for which the cookie is valid
+      });
+      return res
+  }
   
   catch (error) {
-
     console.error(error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
     );
   }
-  return NextResponse.json({
-    message: "User login successfully",
-  });
 }
 
 

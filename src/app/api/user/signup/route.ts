@@ -1,9 +1,12 @@
-import connectToDatabase from "@/app/LIB/db";
+import { connecttodb } from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
 import { signupSchema } from "@/app/LIB/ValidateSchema/signupSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs'
+import jwt from "jsonwebtoken"
+const key = process.env.JWT_KEY||"SECRET"
+connecttodb();
 
 // Define the Zod schema for request body validation
 const validate = (Schema: any) => async (req: NextApiRequest, res: NextApiResponse, next: Function) => {
@@ -18,11 +21,6 @@ const validate = (Schema: any) => async (req: NextApiRequest, res: NextApiRespon
 export async function POST(req: NextRequest) {
 
   try{
-    //@ts-ignore
-    await connectToDatabase();
-    
-    
-   
     
     if(validate(signupSchema)){
       const body = await req.json();
@@ -59,15 +57,29 @@ export async function POST(req: NextRequest) {
       
       // Save the user to the database
       const user = await newUser.save();
-      // Create a token
-      // add user._id in token
-      return NextResponse.json({
+      // Create a token add user._id in token
+      const token = jwt.sign({userid:newUser._id},key);
+
+      const res =  NextResponse.json({
         message: "User created successfully",
+        token:token
       });
+      res.cookies.set('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',// Set to false for local development, true for production
+        maxAge: 24*3600, // Token expiry time in seconds
+        path: '/', // Path for which the cookie is valid
+      });
+      return res
     } 
     
     
-    
+    return NextResponse.json(
+      { 
+        message: "incorrect inputs",
+      },
+      { status: 500 },
+    );
   
 
     }
