@@ -1,35 +1,22 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
+export async function connecttodb() {
+try {
+mongoose.connect(process.env.MONGODB_URI!);
+const connection = mongoose.connection;
 
-const connectionString = process.env.MONGODB_URI||"";
+connection.on('connected', () => {
+console.log('MongoDB connected successfully');
+})
 
-if (!connectionString) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+connection.on('error', (err) => {
+console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
+process.exit();
+})
+
+} catch (error) {
+console.log('Something goes wrong!');
+console.log(error);
+
 }
-//@ts-ignore
-let cached = global.mongoose;
-
-if (!cached) {
-    //@ts-ignore
-  cached = global.mongoose = { conn: null, promise: null };
 }
-
-async function connectToDatabase() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
-    cached.promise = mongoose.connect(connectionString, opts).then((mongoose) => {
-      return mongoose;
-    });
-  }
-  cached.conn = await cached.promise;
-  return cached.conn;
-}
-
-export default connectToDatabase;

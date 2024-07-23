@@ -1,8 +1,11 @@
-import connectToDatabase from "@/app/LIB/db";
+import  { connecttodb } from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
 import { signupSchema } from "@/app/LIB/ValidateSchema/signupSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiRequest, NextApiResponse } from 'next';
+import jwt from "jsonwebtoken"
+const key = process.env.JWT_KEY ||"";
+connecttodb()
 
 // Define the Zod schema for request body validation
 const validate = (Schema: any) => async (req: NextApiRequest, res: NextApiResponse, next: Function) => {
@@ -16,11 +19,7 @@ const validate = (Schema: any) => async (req: NextApiRequest, res: NextApiRespon
 
 export async function POST(req: NextRequest) {
 
-  try{
-    //@ts-ignore
-    await connectToDatabase();
-    
-    
+  try{    
     // Parse and validate the request body
     
     if(validate(signupSchema)){
@@ -48,13 +47,24 @@ export async function POST(req: NextRequest) {
       const user = new User(body);
       await user.save();
   
-      // Create a token
-      // add user._id in token
-    } 
+      const token = jwt.sign({userid:user._id},key);
+      const res =  NextResponse.json({
+        message: "User Login successfully",
+        token:token
+      });
+  
+      res.cookies.set('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Set to true in production
+        maxAge: 24*3600, // Token expiry time in seconds
+        path: '/', // Path for which the cookie is valid
+      });
+      return res;
+    }
     
     
     return NextResponse.json({
-      message: "User created successfully",
+      message: "Please  Enter valid input",
     });
 
     }
@@ -67,11 +77,7 @@ export async function POST(req: NextRequest) {
         { status: 500 },
       );
     }
-    
-    
-
-
-   
+ 
 }
 
 

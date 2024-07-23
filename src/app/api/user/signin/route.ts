@@ -1,11 +1,10 @@
-
-
-
-import connectToDatabase from "@/app/LIB/db";
+import { connecttodb } from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-
+import jwt from "jsonwebtoken"
+const key = process.env.JWT_KEY ||"";
+import cookie from "cookie"
+connecttodb();
 
 // Define the Zod schema for request body validation
 
@@ -13,7 +12,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
 
   try{
-    await connectToDatabase();
     const body = await req.json();
     // Parse and validate the request body
 
@@ -35,8 +33,20 @@ export async function POST(req: NextRequest) {
     }
 
 
-    // Create a token
-    // add user._id in token
+    const token = jwt.sign({userid:existuser._id},key);
+
+    const res =  NextResponse.json({
+      message: "User Login successfully",
+      token:token
+    });
+
+    res.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Set to true in production
+      maxAge: 24*3600, // Token expiry time in seconds
+      path: '/', // Path for which the cookie is valid
+    });
+    return res;
 
   } 
   
@@ -48,9 +58,6 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-  return NextResponse.json({
-    message: "User login successfully",
-  });
 }
 
 
