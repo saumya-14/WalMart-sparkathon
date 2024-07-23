@@ -3,6 +3,7 @@ import { User } from "@/app/LIB/Shema/user";
 import { signupSchema } from "@/app/LIB/ValidateSchema/signupSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcryptjs'
 
 // Define the Zod schema for request body validation
 const validate = (Schema: any) => async (req: NextApiRequest, res: NextApiResponse, next: Function) => {
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
     
     if(validate(signupSchema)){
       const body = await req.json();
+      const {Username,email,password,avatar}=await req.json();
       const existuser = await User.findOne({ email:body.email });
       const existUsername=await User.findOne({Username:body.Username});
   
@@ -45,18 +47,28 @@ export async function POST(req: NextRequest) {
       }
   
       // first hash password then save to db
-      const user = new User(body);
-      await user.save();
-  
+      const hashedPassword = await bcrypt.hash(password, 10);
+    
+      // Create a new user object
+      const newUser = new User({
+        Username,
+        email,
+        password: hashedPassword,
+        avatar,
+      });
+      
+      // Save the user to the database
+      const user = await newUser.save();
       // Create a token
       // add user._id in token
+      return NextResponse.json({
+        message: "User created successfully",
+      });
     } 
     
     
     
-    return NextResponse.json({
-      message: "User created successfully",
-    });
+  
 
     }
     catch (error:any) {
@@ -77,4 +89,3 @@ export async function POST(req: NextRequest) {
 
 
 //its working fine on http://localhost:3000/api/user/signup
-//all comment work done by somya

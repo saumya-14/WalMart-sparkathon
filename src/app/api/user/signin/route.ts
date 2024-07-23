@@ -5,7 +5,7 @@ import connectToDatabase from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-
+import bcrypt from 'bcryptjs'
 
 // Define the Zod schema for request body validation
 
@@ -27,7 +27,9 @@ export async function POST(req: NextRequest) {
     }
 
     // first hasr password to Compare passwords
-    if(existuser.password!=body.password) {
+
+    const validpassword=await bcrypt.compare(body.password,existuser.password);
+    if(!validpassword) {
         return NextResponse.json(
             { message: "Incorrect password" },
             { status: 401 }
@@ -55,4 +57,3 @@ export async function POST(req: NextRequest) {
 
 
 //its working fine on http://localhost:3000/api/user/signin
-//all comment work done by somya
