@@ -4,7 +4,6 @@
 
 import connectToDatabase from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -49,3 +48,4 @@ export async function POST(req: NextRequest) {
 
 
 //its working fine on http://localhost:3000/api/user/signin
+//all comment work done by somya
