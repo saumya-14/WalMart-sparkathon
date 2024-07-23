@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
     
     
-    // Parse and validate the request body
+   
     
     if(validate(signupSchema)){
       const body = await req.json();
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
       // Create a token
       // add user._id in token
     } 
+    
     
     
     return NextResponse.json({
