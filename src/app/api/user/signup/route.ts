@@ -1,6 +1,6 @@
 import { connecttodb } from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
-import { signupSchema } from "@/app/LIB/ValidateSchema/signupSchema";
+import { signupSchema } from "@/app/LIB/ValidateSchema/schema";
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs'

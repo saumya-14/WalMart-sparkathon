@@ -3,10 +3,10 @@
 
 import { connecttodb } from "@/app/LIB/db";
 import { User } from "@/app/LIB/Shema/user";
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken"
+import { signinSchema } from "@/app/LIB/ValidateSchema/schema";
 const key = process.env.JWT_KEY||"SECRET"
 connecttodb();
 // Define the Zod schema for request body validation
@@ -17,7 +17,10 @@ export async function POST(req: NextRequest) {
   try{
     const body = await req.json();
     // Parse and validate the request body
-
+    const { success } = signinSchema.safeParse(body);
+    if(!success){
+      return NextResponse.json({message: "Invalid input data"}, {status: 400});
+    }
 
     const existuser = await User.findOne({ email:body.email });
     if (!existuser) {
