@@ -11,4 +11,4 @@ const productscema = new mongoose.Schema({
     childimage: []
 });
 
-export const Product = mongoose.models.Product || mongoose.model("Product", productscema);
+export const Product = mongoose.models.product || mongoose.model("Product", productscema);
