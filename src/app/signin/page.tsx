@@ -28,7 +28,8 @@ const page = () => {
         </div>
       </div>
       <div className="w-1/2 h-full flex flex-col justify-center items-center border border-[#0058A3]">
-  <Image src={logo} alt="logo" />
+      <div className="mt-5 mb-5  h-full w-[85%] flex flex-col justify-center items-center border border-[#0058A3] border-8">
+       <Image src={logo} alt="logo" />
   <div className="text-[#FFBD14] text-2xl mt-4">LogIn to your Walmart account</div>
   <div className="mt-10 w-full max-w-xs">
     <div className="mt-4 text-[#000000] text-xs">
@@ -62,6 +63,7 @@ const page = () => {
               <span className="text-[#0058A3] cursor-pointer">Sign up today!</span>
             </Link>
     </div>
+  </div>
   </div>
 </div>
     </main>
