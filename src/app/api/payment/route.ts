@@ -1,9 +1,9 @@
-import { connecttodb } from "@/app/LIB/db";
-import { User } from "@/app/LIB/Shema/user";
+import { connecttodb } from "@/dbconfig/db";
 import { getDataFromToken } from "@/helpers/getdatafromtoken";
 import  Jwt  from "jsonwebtoken";
 import { NextRequest, NextResponse } from 'next/server';
 import { Document } from 'mongoose';
+import { User } from "@/Shema/user";
 
 const key = process.env.JWT_KEY || "SECRET"
 

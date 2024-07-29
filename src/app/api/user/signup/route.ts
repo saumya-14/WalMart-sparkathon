@@ -1,10 +1,10 @@
-import { connecttodb } from "@/app/LIB/db";
-import { User } from "@/app/LIB/Shema/user";
-import { signupSchema } from "@/app/LIB/ValidateSchema/schema";
+import { connecttodb } from "@/dbconfig/db";
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken"
+import { signupSchema } from "@/ValidateSchema/schema";
+import { User } from "@/Shema/user";
 const key = process.env.JWT_KEY||"SECRET"
 connecttodb();
 

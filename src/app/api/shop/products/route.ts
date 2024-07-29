@@ -1,5 +1,5 @@
-import { connecttodb } from "@/app/LIB/db";
-import { Product } from "@/app/LIB/Shema/product";
+import { connecttodb } from "@/dbconfig/db";
+import { Product } from "@/Shema/product";
 import { NextRequest, NextResponse } from "next/server";
 
 connecttodb();

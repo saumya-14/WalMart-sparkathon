@@ -1,12 +1,12 @@
 
 
 
-import { connecttodb } from "@/app/LIB/db";
-import { User } from "@/app/LIB/Shema/user";
+import { connecttodb } from "@/dbconfig/db";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken"
-import { signinSchema } from "@/app/LIB/ValidateSchema/schema";
+import { signinSchema } from "@/ValidateSchema/schema";
+import { User } from "@/Shema/user";
 const key = process.env.JWT_KEY||"SECRET"
 connecttodb();
 // Define the Zod schema for request body validation
