@@ -36,12 +36,12 @@ export async function POST(req: NextRequest) {
       }
   
       //checking wether the user with ths username already  exist or not 
-      if (existUsername) {
-        return NextResponse.json(
-          { message: "User with this username alredy exist" },
-          { status: 404 }
-        );
-      }
+      // if (existUsername) {
+      //   return NextResponse.json(
+      //     { message: "User with this username alredy exist" },
+      //     { status: 404 }
+      //   );
+      // }
   
       // first hash password then save to db
       const user = new User(body);
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   
       const token = jwt.sign({userid:user._id},key);
       const res =  NextResponse.json({
-        message: "User Login successfully",
+        message: "User Signup successfully",
         token:token
       });
   
