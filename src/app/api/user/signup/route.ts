@@ -1,11 +1,12 @@
-import  { connecttodb } from "@/app/LIB/db";
-import { User } from "@/app/LIB/Shema/user";
-import { signupSchema } from "@/app/LIB/ValidateSchema/signupSchema";
+import { connecttodb } from "@/dbconfig/db";
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken"
-const key = process.env.JWT_KEY ||"";
-connecttodb()
+import { signupSchema } from "@/ValidateSchema/schema";
+import { User } from "@/Shema/user";
+const key = process.env.JWT_KEY||"SECRET"
+connecttodb();
 
 // Define the Zod schema for request body validation
 const validate = (Schema: any) => async (req: NextApiRequest, res: NextApiResponse, next: Function) => {
@@ -19,11 +20,11 @@ const validate = (Schema: any) => async (req: NextApiRequest, res: NextApiRespon
 
 export async function POST(req: NextRequest) {
 
-  try{    
-    // Parse and validate the request body
+  try{
     
     if(validate(signupSchema)){
       const body = await req.json();
+      const {Username,email,password,avatar}=await req.json();
       const existuser = await User.findOne({ email:body.email });
       const existUsername=await User.findOne({Username:body.Username});
   
@@ -44,28 +45,46 @@ export async function POST(req: NextRequest) {
       // }
   
       // first hash password then save to db
-      const user = new User(body);
-      await user.save();
-  
-      const token = jwt.sign({userid:user._id},key);
+      const hashedPassword = await bcrypt.hash(password, 10);
+    
+      // Create a new user object
+      const newUser = new User({
+        Username,
+        email,
+        password: hashedPassword,
+        avatar,
+      });
+      
+      // Save the user to the database
+      const user = await newUser.save();
+      // Create a token add user._id in token
+      const token = jwt.sign({userid:newUser._id},key);
+
       const res =  NextResponse.json({
+<<<<<<< HEAD
         message: "User Signup successfully",
+=======
+        message: "User created successfully",
+>>>>>>> e0c7cfdc3bf7bc8d7e3e511215a5729d7b8263a4
         token:token
       });
-  
       res.cookies.set('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Set to true in production
+        secure: process.env.NODE_ENV === 'production',// Set to false for local development, true for production
         maxAge: 24*3600, // Token expiry time in seconds
         path: '/', // Path for which the cookie is valid
       });
-      return res;
-    }
+      return res
+    } 
     
     
-    return NextResponse.json({
-      message: "Please  Enter valid input",
-    });
+    return NextResponse.json(
+      { 
+        message: "incorrect inputs",
+      },
+      { status: 500 },
+    );
+  
 
     }
     catch (error:any) {
@@ -77,9 +96,12 @@ export async function POST(req: NextRequest) {
         { status: 500 },
       );
     }
- 
+    
+    
+
+
+   
 }
 
 
 //its working fine on http://localhost:3000/api/user/signup
-//all comment work done by somya

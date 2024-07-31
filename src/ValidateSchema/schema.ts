@@ -9,3 +9,8 @@ export const signupSchema=z.object({
     passwrod:z.string().min(6,{message:"password must be atleast 6 character"}),
     avatar:z.string().optional()
 })
+
+export const signinSchema=z.object({
+    email:z.string().email({message:"Invalid email address"}),
+    passwrod:z.string().min(6,{message:"password must be atleast 6 character"}),
+})
