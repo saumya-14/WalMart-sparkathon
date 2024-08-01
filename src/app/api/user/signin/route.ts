@@ -9,7 +9,7 @@ import { signinSchema } from "@/ValidateSchema/schema";
 import { User } from "@/Shema/user";
 const key = process.env.JWT_KEY||"SECRET"
 connecttodb();
-// Define the Zod schema for request body validation
+
 
 
 export async function POST(req: NextRequest) {

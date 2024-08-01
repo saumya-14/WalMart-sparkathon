@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     console.log("Received form data:", Array.from(formData.entries()));
 
     // Handle file upload
-    const file = formData.get('image') as File | null; // Ensure correct field name
+    const file = formData.get('image') as File | null; 
     if (!file) {
       return NextResponse.json({
         message: "No file uploaded",

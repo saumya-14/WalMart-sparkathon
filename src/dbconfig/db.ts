@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export async function connecttodb() {
 try {
-mongoose.connect(process.env.MONGODB_URI!);
+mongoose.connect("mongodb+srv://21012003rs:xo46gGwuYsY2e812@cluster0.srzk2sy.mongodb.net/WALL-MART-FINAL?retryWrites=true&w=majority&appName=Cluster0");
 const connection = mongoose.connection;
 
 connection.on('connected', () => {
