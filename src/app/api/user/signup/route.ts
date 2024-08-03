@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken"
 import { signupSchema } from "@/ValidateSchema/schema";
 import { User } from "@/Shema/user";
+import { AddtoCart } from "@/Shema/product";
 const key = process.env.JWT_KEY||"SECRET"
 connecttodb();
 
@@ -54,18 +55,23 @@ export async function POST(req: NextRequest) {
         password: hashedPassword,
         avatar,
       });
+
+
       
       // Save the user to the database
       const user = await newUser.save();
+
+      const usercart = new AddtoCart({
+        userId:user._id,
+        products:[]
+      });
+
+      await usercart.save();
       // Create a token add user._id in token
       const token = jwt.sign({userid:newUser._id},key);
 
       const res =  NextResponse.json({
-<<<<<<< HEAD
-        message: "User Signup successfully",
-=======
         message: "User created successfully",
->>>>>>> e0c7cfdc3bf7bc8d7e3e511215a5729d7b8263a4
         token:token
       });
       res.cookies.set('token', token, {
