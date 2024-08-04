@@ -15,7 +15,7 @@ const Navbar = () => {
  const [cartopen,setCartopen]=useState(false);
 
   return (
-    <div className='bg-[#0071DC] w-full h-20 flex justify-center items-center'>
+    <div className='bg-[#0071DC] w-full h-20 flex justify-center items-center relative'>
         {/* left */}
         <div className='flex flex-row w-1/4 justify-between items-center'>
             <Image src={logo} alt="logo" className='h-16'/>

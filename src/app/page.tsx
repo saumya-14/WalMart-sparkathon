@@ -1,6 +1,5 @@
 import Herosection1 from "@/components/Herosection1";
 import Imagecontainer from "@/components/Imagecontainer";
-import Navbar from "@/components/Navbar";
 import furniture from '../../public/furniture.png'
 import storage from '../../public/storage.png'
 
@@ -14,7 +13,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <main className="bg-white min-h-screen">
-      <Navbar />
+      
       <Herosection1 />
       <div className="p-4">
         <h2 className="text-2xl font-bold">Flash Deals
