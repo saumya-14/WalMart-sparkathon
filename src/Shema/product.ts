@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const productSchema = new mongoose.Schema({
   title: {
@@ -29,7 +29,12 @@ const productSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Check if the model already exists
-const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+const addtocartsema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  products: [{ type: Schema.Types.ObjectId}]
+})
 
-export { Product };
+// Check if the model already exists
+export const AddtoCart = mongoose.models.AddtoCart || mongoose.model('AddtoCart',addtocartsema);
+export const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+
