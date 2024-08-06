@@ -1,27 +1,28 @@
 import { connecttodb } from "@/dbconfig/db";
 import { Product } from "@/Shema/product";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // Connect to the database
 connecttodb();
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    // Fetch all products from the database
-    const products = await Product.find();
+    // Fetch products from the database
+    const products = await Product.find({});
 
-    // Return the products in the response
-    return NextResponse.json({
-      message: "Products retrieved successfully",
-      success: true,
-      products,
-    });
+    // Set CORS headers
+    const headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+
+    return new NextResponse(JSON.stringify(products), { headers });
   } catch (error) {
-    console.error("Error fetching products:", error.message);
-    return NextResponse.json({
-      message: "Failed to fetch products",
-      success: false,
-      error: error.message,
+    console.error("Error fetching products:", error);
+    return new NextResponse("Failed to fetch products", {
+      headers,
+      status: 500,
     });
   }
 }
