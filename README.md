@@ -2,8 +2,8 @@
 Welcome to the Walmart Virtual Reality Store project! This project is developed as part of the Walmart Sparkathon, showcasing a 3D virtual shopping experience using Three.js.
 
 ## Table of Contents
-Overview
-Features
+* Overview
+*Features
 Technologies Used
 Installation
 Usage
