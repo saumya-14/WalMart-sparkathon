@@ -3,7 +3,7 @@ Welcome to the Walmart Virtual Reality Store project! This project is developed 
 
 ## Table of Contents
 * Overview
-*Features
+* Features
 Technologies Used
 Installation
 Usage
