@@ -16,6 +16,7 @@ The Walmart Virtual Reality Store offers users an immersive 3D shopping experien
 ## Features
 * 3D Store Navigation: Explore the store in a 3D environment.
 * Product Interaction: Click on products to view details and add them to your cart.
+* 
 * Order Placement: Seamless order placement and checkout process.
 * Real-Time Updates: Real-time updates on product availability and order status.
 * Home Product Viewing: Check products in real-time at your home using AR.
@@ -26,7 +27,11 @@ The Walmart Virtual Reality Store offers users an immersive 3D shopping experien
 * MongoDB: For storing product data and user orders.
 * Socket.io: For real-time updates.
 ## Installation
-To run this project locally, follow these steps:
+To run this project loca
+
+https://github.com/user-attachments/assets/784c0809-e31f-4644-864f-226ea727b031
+
+lly, follow these steps:
 * Clone the repository: git clone https://github.com/saumya-14/WalMart-sparkathon.git,cd Walmart-sparkathon
 * Install dependencies:npm install
 * Start the development server: npm run dev
